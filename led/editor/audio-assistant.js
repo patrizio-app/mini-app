@@ -54,7 +54,7 @@
       <div class="aa-card aa-drop" id="aa-drop">
         <input type="file" id="aa-file" accept="audio/*,.mp3,.wav,.m4a,.ogg,.flac" hidden>
         <div class="aa-drop-inner">
-          <button class="aa-btn aa-btn-primary" id="aa-choose">📂 Scegli file audio</button>
+          <button class="aa-btn aa-btn-primary" id="aa-choose">Scegli file audio</button>
           <span class="aa-drop-hint">o trascina qui</span>
           <div class="aa-file-info" id="aa-file-info">nessun brano caricato</div>
         </div>

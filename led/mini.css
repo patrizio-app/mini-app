@@ -77,3 +77,9 @@ body.con-barra { padding-bottom: calc(120px + env(safe-area-inset-bottom)); }
 /* avviso solo per il telefono tenuto in verticale */
 .mini-gira { display: none; margin: 8px 0; padding: 8px 12px; border: 1px solid #ff2bd6; border-radius: 8px; color: #ffd3f4; font-size: 12px; }
 @media (max-width: 600px) and (orientation: portrait) { .mini-gira { display: block; } }
+
+/* dal telefono non si trascinano file */
+.aa-drop-hint { display: none !important; }
+/* i messaggi a comparsa stanno sopra la barra comandi */
+body.con-barra .toast { bottom: calc(80px + env(safe-area-inset-bottom)) !important; z-index: 950; }
+@media (max-width: 560px) { body.con-barra .toast { bottom: calc(130px + env(safe-area-inset-bottom)) !important; } }
