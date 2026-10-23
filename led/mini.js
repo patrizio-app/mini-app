@@ -205,10 +205,10 @@
   function freccia(dir) { tasto(dir, { alt: markerSelezionati() > 0, usaShift: true }); }
   function etichetteFrecce() {
     const passo = stato.shift ? '100ms' : '10ms';
-    const cosa = markerSelezionati() > 0 ? 'MARKER ' : '';
+    const mk = markerSelezionati() > 0;          // con marker selezionati le frecce spostano QUEI marker
     const sx = document.getElementById('mini-sx'), dx = document.getElementById('mini-dx');
-    if (sx) sx.textContent = '◀ ' + cosa + passo;
-    if (dx) dx.textContent = cosa + passo + ' ▶';
+    if (sx) { sx.textContent = '◀ ' + passo; sx.classList.toggle('sposta-mk', mk); }
+    if (dx) { dx.textContent = passo + ' ▶'; dx.classList.toggle('sposta-mk', mk); }
   }
   function saltaOndaPalco() {
     const onda = document.getElementById('aa-wave-card') || document.getElementById('aa-canvas');
@@ -218,22 +218,22 @@
     (sulPalco ? onda : palco).scrollIntoView({ behavior: 'smooth', block: sulPalco ? 'start' : 'center' });
   }
   const COMANDI = [
-    // [etichetta, azione, spiegazione, gruppo]
-    ['▶ ❚❚', () => tasto(' '), 'play / pausa', 'sempre'],
-    ['＋ MARKER', () => tasto('m'), 'marker nel punto che sta suonando: toccalo a tempo di musica', 'sempre'],
-    // frecce di precisione: con marker selezionati sull'onda spostano QUEI marker, altrimenti la linea
-    // di ascolto. 10 ms a tocco, 100 ms con ⇧ MULTI acceso (come ← → e ⌥← → del Mac)
-    ['◀', () => freccia('ArrowLeft'), 'indietro di 10 ms (100 ms con ⇧ MULTI)', 'sempre', 'mini-sx'],
-    ['▶', () => freccia('ArrowRight'), 'avanti di 10 ms (100 ms con ⇧ MULTI)', 'sempre', 'mini-dx'],
-    ['⟲', () => tasto('z', { meta: true }), 'annulla', 'sempre'],
-    ['⟳', () => tasto('z', { meta: true, shift: true }), 'ripeti', 'sempre'],
-    ['⇅', saltaOndaPalco, 'salta tra onda e palco', 'sempre'],
-    ['‹ MK', () => tasto('['), 'marker precedente (il palco mostra quel marker)', 'sempre'],
-    ['MK ›', () => tasto(']'), 'marker successivo (il palco mostra quel marker)', 'sempre'],
+    // [etichetta, azione, spiegazione, gruppo, id]   gruppi: ascolto · marker · precisione · modifica · sel (racchette)
+    ['▶ ❚❚', () => tasto(' '), 'play / pausa', 'ascolto'],
+    ['＋ MARKER', () => tasto('m'), 'marker nel punto che sta suonando: toccalo a tempo di musica', 'ascolto'],
+    ['‹ MK', () => tasto('['), 'marker precedente (il palco mostra quel marker)', 'marker'],
+    ['MK ›', () => tasto(']'), 'marker successivo (il palco mostra quel marker)', 'marker'],
+    // frecce di precisione: con marker selezionati sull'onda spostano QUEI marker (diventano rosa),
+    // altrimenti la linea di ascolto. 10 ms a tocco, 100 ms con MULTI acceso (come ← → e ⌥← → del Mac)
+    ['◀', () => freccia('ArrowLeft'), 'indietro di 10 ms (100 ms con MULTI); rosa = sposta i marker selezionati', 'precisione', 'mini-sx'],
+    ['▶', () => freccia('ArrowRight'), 'avanti di 10 ms (100 ms con MULTI); rosa = sposta i marker selezionati', 'precisione', 'mini-dx'],
+    ['⟲', () => tasto('z', { meta: true }), 'annulla', 'modifica'],
+    ['⟳', () => tasto('z', { meta: true, shift: true }), 'ripeti', 'modifica'],
+    ['⇅', saltaOndaPalco, 'salta tra onda e palco', 'modifica'],
     ['BUIO', () => tasto('b'), 'BUIO alle racchette selezionate', 'sel'],
-    ['CANCELLA', () => tasto('x'), 'togli l\'effetto alle racchette selezionate', 'sel'],
-    ['COPIA EFF.', () => tasto('c', { meta: true }), 'copia l\'effetto della racchetta selezionata', 'sel'],
-    ['INCOLLA EFF.', () => tasto('v', { meta: true }), 'incolla l\'effetto sulle racchette selezionate', 'sel'],
+    ['CANCELLA', () => tasto('x'), "togli l'effetto alle racchette selezionate", 'sel'],
+    ['COPIA', () => tasto('c', { meta: true }), "copia l'effetto della racchetta selezionata", 'sel'],
+    ['INCOLLA', () => tasto('v', { meta: true }), "incolla l'effetto sulle racchette selezionate", 'sel'],
   ];
 
   function costruisciBarra() {
@@ -242,8 +242,9 @@
     barra.id = 'mini-barra';
     barra.className = 'mini-barra';
     barra.innerHTML =
-      '<button class="mini-k mini-shift" id="mini-shift" title="selezione multipla: i tocchi sulle racchette e sui marker si sommano">⇧ MULTI</button>' +
-      COMANDI.map((c, i) => '<button class="mini-k' + (c[3] === 'sel' ? ' mini-sel' : '') + '"' + (c[4] ? ' id="' + c[4] + '"' : '') + ' data-k="' + i + '" title="' + esc(c[2]) +
+      '<button class="mini-k mini-shift" id="mini-shift" title="selezione multipla: i tocchi sulle racchette e sui marker si sommano">MULTI</button>' +
+      COMANDI.map((c, i) => (i && COMANDI[i - 1][3] !== c[3] ? '<span class="mini-sep' + (c[3] === 'sel' ? ' mini-sel' : '') + '"></span>' : '') +
+        '<button class="mini-k mini-g-' + c[3] + (c[3] === 'sel' ? ' mini-sel' : '') + '"' + (c[4] ? ' id="' + c[4] + '"' : '') + ' data-k="' + i + '" title="' + esc(c[2]) +
         '" aria-label="' + esc(c[2]) + '">' + esc(c[0]) + '</button>').join('') +
       '<button class="mini-k mini-nascondi" id="mini-nascondi" title="nascondi la barra" aria-label="nascondi la barra">▾</button>';
     document.body.appendChild(barra);
@@ -286,18 +287,6 @@
       etichetteFrecce();
     }, 300);
   }
-
-  // telefono in verticale: avviso sopra il palco (le racchette in coppia si sovrappongono)
-  const avvisoGira = setInterval(() => {
-    const wrap = document.querySelector('.co-stage-wrap');
-    if (!wrap) return;
-    clearInterval(avvisoGira);
-    if (document.getElementById('mini-gira')) return;
-    const a = document.createElement('div');
-    a.id = 'mini-gira'; a.className = 'mini-gira';
-    a.textContent = '↻ Gira il telefono in orizzontale: il palco diventa più grande e le racchette si toccano meglio.';
-    wrap.parentNode.insertBefore(a, wrap);
-  }, 400);
 
   // VISIONE D'INSIEME apribile/chiudibile toccando il titolo (parte chiusa: vedi mini.css)
   document.addEventListener('click', (e) => {

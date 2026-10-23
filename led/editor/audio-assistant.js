@@ -92,7 +92,7 @@
             <span class="aa-time" id="aa-time">0:00 / 0:00</span>
           </div>
           <div class="aa-ctl-group">
-            <button class="aa-btn" id="aa-interp" disabled>Interpola (I)</button>
+            <button class="aa-btn" id="aa-interp" disabled>Interpola</button>
             <button class="aa-btn" id="aa-remove" disabled>Rimuovi selez.</button>
             <span class="aa-count"><b id="aa-marker-count">1</b> marker · <b id="aa-sel-count">0</b> selez.</span>
           </div>
@@ -814,7 +814,7 @@
     if (!l) return;
     l.textContent = wc.zoomato()
       ? `zoom ${Math.round(wc.durationMs / wc.vd())}× · vedi ${(wc.vd() / 1000).toFixed(wc.vd() < 10000 ? 1 : 0)} s`
-      : "canzone intera · pizzica il trackpad per lo zoom";
+      : "canzone intera · due dita per lo zoom";
   }
   function zoomCentro(f) {
     if (!wc.durationMs) return;

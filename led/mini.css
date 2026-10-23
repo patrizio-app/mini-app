@@ -51,16 +51,20 @@ body.con-barra { padding-bottom: calc(120px + env(safe-area-inset-bottom)); }
 }
 .mini-barra::-webkit-scrollbar { display: none; }
 .mini-k {
-  flex: 0 0 auto; min-height: 44px; padding: 0 12px; border-radius: 8px; border: 1px solid #3a3a3a;
+  flex: 0 0 auto; min-height: 42px; padding: 0 12px; border-radius: 8px; border: 1px solid #3a3a3a;
   background: #1d1d1d; color: #eaeaea; font: 700 12px 'JetBrains Mono', ui-monospace, monospace; letter-spacing: .5px;
   white-space: nowrap; touch-action: manipulation;
 }
 .mini-k:active { background: #333; }
 .mini-k.mini-shift.on { background: #ff2bd6; border-color: #ff2bd6; color: #000; }
+.mini-k.sposta-mk { border-color: #ff2bd6; color: #ff7be6; }
+.mini-sep { flex: 0 0 6px; }
+.mini-sep.mini-sel { display: none; }
+.mini-barra.con-selezione .mini-sep.mini-sel { display: block; }
 .mini-k.mini-nascondi { margin-left: auto; }
 .mini-k.mini-sel { display: none; border-color: #ff2bd6; }
 .mini-barra.con-selezione .mini-k.mini-sel { display: inline-flex; align-items: center; }
-.mini-barra { flex-wrap: wrap; justify-content: center; overflow-x: visible; }
+.mini-barra { flex-wrap: wrap; justify-content: center; overflow-x: visible; gap: 8px; }
 .mini-k { min-width: 44px; justify-content: center; }
 @media (max-width: 560px) { .mini-k { padding: 0 9px; font-size: 11px; } .mini-barra { gap: 5px; } }
 .mini-mostra {
@@ -73,10 +77,6 @@ body.con-barra { padding-bottom: calc(120px + env(safe-area-inset-bottom)); }
 .aa-head, .aa-shortcuts, .co-shortcuts { display: none !important; }
 /* l'onda resta al suo posto: niente aggancio in alto mentre si scorre */
 .aa-wave-card { position: relative !important; }
-
-/* avviso solo per il telefono tenuto in verticale */
-.mini-gira { display: none; margin: 8px 0; padding: 8px 12px; border: 1px solid #ff2bd6; border-radius: 8px; color: #ffd3f4; font-size: 12px; }
-@media (max-width: 600px) and (orientation: portrait) { .mini-gira { display: block; } }
 
 /* dal telefono non si trascinano file */
 .aa-drop-hint { display: none !important; }
@@ -105,3 +105,51 @@ body.con-barra .toast { bottom: calc(80px + env(safe-area-inset-bottom)) !import
 .co-lanes-card:not(.aperta) .co-lanes { display: none; }
 /* sul Mac NUOVO sta nella HOME; qui la HOME non c'è: il pulsante serve */
 .co-foot #co-new { display: flex !important; }
+
+/* ================= PULSANTI DELLA COREOGRAFIA: comodi col dito, compatti e allineati =================
+   altezza media (38 px), i pulsanti di ogni riga si allargano fino a riempirla: niente buchi */
+.co-btn, .co-chip, .co-chip2, .aa-btn, .co-sel, .co-libchip {
+  min-height: 38px; padding: 0 10px !important; font-size: 11.5px !important;
+  display: inline-flex; align-items: center; justify-content: center;
+  touch-action: manipulation; -webkit-tap-highlight-color: transparent;
+}
+.co-sel { font-size: 14px !important; padding: 0 8px !important; }
+.co-btn:active, .co-chip2:active, .aa-btn:active { filter: brightness(1.35); }
+/* righe SELEZIONA / PALCO / STRUMENTI e pannello FORMAZIONI: pulsanti che riempiono la riga */
+.co-riga { gap: 9px !important; padding: 10px 12px !important; }
+/* l'ultima riga di pulsanti non si allarga a tutta pagina (niente pulsante da solo lungo tutto lo schermo) */
+.co-riga::after, .co-pan-r::after { content: ''; flex: 4 1 0; order: 98; }
+.co-riga > .co-btn, .co-pan-r > .co-chip2 { flex: 1 1 auto; }
+.co-pan-r { gap: 9px !important; flex-wrap: wrap; }
+.co-riga .co-spinta, .co-riga .co-divider { display: none !important; }
+.co-riga .co-et:not(.co-et-s) { flex: 0 0 76px !important; }
+.co-riga > .co-btn { padding: 0 9px !important; }
+.co-riga .co-sel-info { flex: 0 0 100%; order: 99; max-width: none; text-align: right; margin: 0; }
+.co-riga .co-et-s, .co-riga .co-lib:empty + .co-btn { flex-grow: 0; }
+/* marker ‹ › ed EFFETTO + ASSEGNA su una riga ordinata */
+.co-toolbar { gap: 8px 12px !important; align-items: center; }
+.co-mk, .co-brush { gap: 9px; flex-wrap: wrap; align-items: center; }
+#co-prev, #co-next { min-width: 44px; font-size: 16px !important; }
+#co-assign { min-width: 110px; font-size: 13px !important; letter-spacing: 1px; }
+/* annulla/ripeti stanno già nella barra in basso (⟲ ⟳): niente doppioni */
+#co-undo, #co-redo { display: none !important; }
+.aa-zoom-b { min-width: 42px; }
+/* telefono stretto: etichette sopra ai pulsanti, così la riga è tutta per i pulsanti */
+/* riga dei marker: ‹  marker 2/5 · 0:12  › sempre su una riga sola */
+.co-mk { flex-wrap: nowrap !important; min-width: 0; }
+.co-mk-lbl { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: center; }
+@media (max-width: 700px) {
+  .co-riga .co-et:not(.co-et-s) { flex: 0 0 100% !important; margin-bottom: -2px; }
+  .co-mk { flex: 0 0 100%; }
+  .co-brush { flex: 0 0 100%; }
+  .co-brush .co-sel { flex: 1 1 120px; }
+  #co-assign { flex: 1 1 140px; }
+}
+/* barra in basso: i comandi delle racchette selezionate vanno su una riga tutta loro */
+.mini-barra.con-selezione .mini-sep.mini-sel { flex: 0 0 100%; height: 0; }
+@media (max-height: 500px) {
+  .mini-k { min-height: 38px; }
+  .mini-barra { padding-top: 6px; gap: 7px; }
+  body.con-barra { padding-bottom: calc(60px + env(safe-area-inset-bottom)); }
+  body.con-barra .toast { bottom: calc(58px + env(safe-area-inset-bottom)) !important; }
+}

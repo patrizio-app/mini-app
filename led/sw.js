@@ -1,6 +1,6 @@
 /* Service worker: tiene la app salvata sul dispositivo per usarla senza internet.
  * VERSIONE la aggiorna da solo strumenti/monta_led.py a ogni montaggio. */
-const VERSIONE = 'led-586a6bdbf9';
+const VERSIONE = 'led-48de188a9f';
 const FILE = [
   './', './index.html', './mini.css', './mini.js', './motore.js', './manifest.webmanifest',
   './editor/app.css', './editor/audio-assistant.css', './editor/coreografia.css',

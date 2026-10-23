@@ -298,7 +298,7 @@
           <span class="co-divider"></span>
           <span class="co-et co-et-s">GRUPPI</span>
           <span class="co-lib" id="co-gruppi"></span>
-          <button class="co-btn co-chip" id="co-gruppo-salva" title="da' un nome alle racchette selezionate (ricorda anche l'ordine in cui le hai scelte)">+ SALVA GRUPPO</button>
+          <button class="co-btn co-chip" id="co-gruppo-salva" title="da' un nome alle racchette selezionate (ricorda anche l'ordine in cui le hai scelte)">+ GRUPPO</button>
           <span class="co-spinta"></span>
           <span class="co-sel-info" id="co-sel-info">0 selezionate</span>
         </div>
@@ -308,8 +308,8 @@
           <button class="co-btn co-chip" id="co-allinea" title="come sul desktop: porta ognuna sul punto della griglia piu' vicino">ALLINEA</button>
           <button class="co-btn co-chip" id="co-scambia" title="ballerino di schiena o racchette incrociate: inverte di posto le due racchette della coppia (selezionate, o tutte)">SCAMBIA</button>
           <span class="co-divider"></span>
-          <button class="co-btn co-chip" id="co-copia-form" title="copia SOLO le posizioni di questo marker (non gli effetti) — ⇧⌘C">COPIA FORMAZIONE</button>
-          <button class="co-btn co-chip" id="co-incolla-form" title="mette le posizioni copiate su questo marker, senza toccare gli effetti — ⇧⌘V" disabled>INCOLLA FORMAZIONE</button>
+          <button class="co-btn co-chip" id="co-copia-form" title="copia SOLO le posizioni di questo marker (non gli effetti) — ⇧⌘C">COPIA FORM.</button>
+          <button class="co-btn co-chip" id="co-incolla-form" title="mette le posizioni copiate su questo marker, senza toccare gli effetti — ⇧⌘V" disabled>INCOLLA FORM.</button>
           <span class="co-spinta"></span>
           <button class="co-btn co-chip" id="co-grid" title="mostra una griglia di riferimento (g)">GRIGLIA</button>
           <button class="co-btn co-chip" id="co-coppie-btn" title="ogni ballerino ha due racchette (1-2, 3-4...): una linea le unisce (trascina la linea = si spostano insieme), DISPONI le mette in coppia"></button>
@@ -508,7 +508,7 @@
     if (!currentId && keyframes().length) currentId = keyframes()[0].id;
 
     const larghPalco = stage.getBoundingClientRect().width || 1000;
-    stage.style.setProperty("--dot", Math.round(Math.max(20, Math.min(40, (larghPalco / QUADRETTI) * 0.88, (larghPalco * 0.94) / (racchette * 1.45)))) + "px");
+    stage.style.setProperty("--dot", Math.round(Math.max(window.MiniTouch ? 30 : 20, Math.min(40, (larghPalco / QUADRETTI) * 0.88, (larghPalco * 0.94) / (racchette * 1.45)))) + "px");
     const posTutte = {};
     for (let n = 1; n <= racchette; n++) {
       const { cella, pos } = effettivo(n);
