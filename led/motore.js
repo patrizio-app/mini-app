@@ -573,7 +573,7 @@
       return json({ errori });
     }
     if (pathname === '/api/importa-tabella') {
-      return errore("Sul telefono/iPad la tabella Excel non si importa: apri lo show come zip (I MIEI SHOW → ⬆ IMPORTA DAL MAC)");
+      return errore("Sul telefono/iPad la tabella Excel non si importa: apri lo show come zip (APRI PROGETTO → ⬆ IMPORTA DAL MAC)");
     }
     if (pathname === '/api/libreria') {
       if (metodo === 'GET') {
