@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="{{ L }}"><head><meta charset="utf-8"><link rel="stylesheet" href="pdf.css"></head>
+<body class="contratto">
+{% set it = (L == 'it') %}
+<div class="piede">{{ 'Contratto' if it else 'Agreement' }} n. {{ p.numero }} · {{ E.ragione_sociale }} – {{ C.ragione_sociale }}</div>
+
+<div class="testa" style="margin-bottom:5mm">
+  <div class="emittente">
+    <div class="nome">{{ E.ragione_sociale }}</div>
+    <div>{{ ind_E }}</div>
+  </div>
+  <div class="titolo" style="padding-top:1mm">
+    <table>
+      <tr><td>{{ 'Contratto n.' if it else 'Agreement no.' }}</td><td><b>{{ p.numero }}</b></td></tr>
+      <tr><td>{{ 'Data' if it else 'Date' }}</td><td>{{ dl(p.data_emissione) }}</td></tr>
+    </table>
+  </div>
+</div>
+
+<h1 class="doc">{{ 'CONTRATTO DI PRESTAZIONE ARTISTICA' if it else 'ARTISTIC PERFORMANCE AGREEMENT' }}</h1>
+<div class="sottotitolo">{{ p.evento.nome }}{% if data_evento %} · {{ dl(data_evento) }}{% endif %}{% if p.evento.location %} · {{ p.evento.location }}{% endif %}</div>
+
+<div class="parti">
+  <p>{{ parte_fornitore | safe }};</p>
+  <div class="tra">{{ 'e' if it else 'and' }}</div>
+  <p>{{ parte_cliente | safe }};</p>
+  <p style="margin-top:2.5mm">{{ 'congiuntamente le «Parti».' if it else 'jointly the “Parties”.' }}</p>
+</div>
+
+<div class="art">
+  <h3>{{ premesse.titolo }}</h3>
+  {% for q in premesse.par %}{% if q %}<p>{{ q | safe }}</p>{% endif %}{% endfor %}
+</div>
+
+{% for a in articoli %}
+<div class="art">
+  <h3>{{ 'Art.' if it else 'Art.' }} {{ a.n }} – {{ a.titolo }}</h3>
+  {% for q in a.par %}
+    <p>{{ q | safe }}</p>
+    {% if a.programma and loop.first %}
+      {% if giorni %}
+      <table class="righe" style="margin:1.5mm 0 2.5mm">
+        <tr><th style="width:24%">{{ 'Data' if it else 'Date' }}</th><th>{{ 'Attività' if it else 'Activity' }}</th><th style="width:26%">{{ 'Orario' if it else 'Time' }}</th></tr>
+        {% for g in giorni %}<tr><td>{{ db(g.data) }}</td><td>{{ g.attivita }}</td><td>{{ g.orario }}</td></tr>{% endfor %}
+      </table>
+      {% endif %}
+      <p>{{ 'Luogo' if it else 'Venue' }}: <b>{{ p.evento.location or '—' }}</b>{% if p.evento.indirizzo %}, {{ p.evento.indirizzo }}{% endif %}{% if p.evento.aperto %} ({{ "all'aperto" if it else 'outdoor' }}){% endif %}.</p>
+    {% endif %}
+  {% endfor %}
+</div>
+{% endfor %}
+
+<p style="margin-top:5mm">{{ 'Letto, approvato e sottoscritto.' if it else 'Read, approved and signed.' }} {{ 'Tarquinia' }}, {{ dl(p.data_emissione) }}</p>
+
+<div class="firme">
+  <div>
+    <div class="etich">{{ 'Il Fornitore' if it else 'The Provider' }} – {{ E.ragione_sociale }}</div>
+    <div class="linea"></div>
+    <div class="sotto">{% if E.tipo == 'asd' %}{{ 'Il legale rappresentante' if it else 'Legal representative' }}{% if E.rappresentante %} – {{ E.rappresentante }}{% endif %}{% else %}{{ E.rappresentante or E.ragione_sociale }}{% endif %}</div>
+  </div>
+  <div>
+    <div class="etich">{{ 'Il Committente' if it else 'The Client' }} – {{ C.ragione_sociale }}</div>
+    <div class="linea"></div>
+    <div class="sotto">{{ 'Timbro e firma' if it else 'Stamp and signature' }}{% if C.referente %} – {{ C.referente }}{% endif %}</div>
+  </div>
+</div>
+
+<div class="art" style="margin-top:7mm; page-break-inside: avoid">
+  <p>{{ approvazione }}</p>
+  <div class="firme" style="margin-top:4mm">
+    <div></div>
+    <div>
+      <div class="etich">{{ 'Il Committente' if it else 'The Client' }}</div>
+      <div class="linea"></div>
+      <div class="sotto">{{ 'Firma per approvazione specifica' if it else 'Signature for specific approval' }}</div>
+    </div>
+  </div>
+</div>
+
+</body></html>

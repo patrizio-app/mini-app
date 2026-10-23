@@ -1,0 +1,58 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><link rel="stylesheet" href="pdf.css"></head>
+<body>
+{% macro t(a, b) %}{{ a }}{% if estero %} / <span style="color:#888">{{ b }}</span>{% endif %}{% endmacro %}
+<div class="piede">{{ E.ragione_sociale }} · P.IVA {{ E.piva }} · {{ 'Copia di cortesia – il documento fiscale valido è la fattura elettronica trasmessa al Sistema di Interscambio' if not estero else 'Courtesy copy of the electronic invoice transmitted to the Italian Revenue Agency (SdI)' }}</div>
+
+<div class="testa">
+  <div class="emittente">
+    <div class="nome">{{ E.ragione_sociale }}</div>
+    <div>{{ ind_E }}</div>
+    <div>{% if E.cf == E.piva %}C.F. e P.IVA {{ E.piva }}{% else %}P.IVA {{ E.piva }} · C.F. {{ E.cf }}{% endif %}</div>
+    <div>{{ E.telefono }} · {{ E.email }}</div>
+  </div>
+  <div class="titolo">
+    <h1>{{ 'FATTURA' }}{% if estero %} <span style="color:#999">/ INVOICE</span>{% endif %}</h1>
+    <table>
+      <tr><td>{{ t('Numero', 'No.') }}</td><td><b>{{ f.numero }}</b></td></tr>
+      <tr><td>{{ t('Data', 'Date') }}</td><td>{{ db(f.data) }}</td></tr>
+      {% if f.scadenza %}<tr><td>{{ t('Scadenza', 'Due date') }}</td><td>{{ db(f.scadenza) }}</td></tr>{% endif %}
+    </table>
+  </div>
+</div>
+
+<div class="due">
+  <div class="box">
+    <div class="etich">{{ t('Cliente', 'Customer') }}</div>
+    <div class="forte">{{ C.ragione_sociale }}</div>
+    {% if ind_C %}<div>{{ ind_C }}</div>{% endif %}
+    {% if C.piva %}<div>{{ t('P.IVA', 'VAT no.') }} {{ C.piva }}</div>{% endif %}
+    {% if C.cf and C.cf != C.piva %}<div>C.F. {{ C.cf }}</div>{% endif %}
+    {% if not estero and C.sdi %}<div>Codice destinatario {{ C.sdi }}</div>{% elif not estero and C.pec %}<div>PEC {{ C.pec }}</div>{% endif %}
+  </div>
+  <div class="box">
+    <div class="etich">{{ t('Pagamento', 'Payment') }}</div>
+    <div>{{ t('Bonifico bancario', 'Bank transfer') }}</div>
+    <div>{{ t('Intestatario', 'Beneficiary') }}: <b>{{ E.intestatario }}</b></div>
+    <div>IBAN: <b>{{ E.iban }}</b></div>
+    <div>BIC/SWIFT: {{ E.swift }} · {{ E.banca }}</div>
+  </div>
+</div>
+
+<table class="righe">
+  <tr><th>{{ t('Descrizione', 'Description') }}</th><th class="n" style="width:10%">{{ t('Q.tà', 'Qty') }}</th><th class="n" style="width:17%">{{ t('Prezzo', 'Price') }}</th><th class="n" style="width:17%">{{ t('Importo', 'Amount') }}</th></tr>
+  {% for r in T.righe %}
+  <tr><td>{{ r.descrizione }}</td><td class="n">{{ g(qta(r)) }}</td><td class="n">{{ euro(r.prezzo) }}</td><td class="n">{{ euro(importo_riga(r)) }}</td></tr>
+  {% endfor %}
+  <tr class="tot"><td colspan="3">{{ t('Imponibile', 'Taxable amount') }}</td><td class="n">{{ euro(T.imponibile) }}</td></tr>
+  <tr class="tot"><td colspan="3">{{ t('IVA', 'VAT') }} {{ g(T.aliquota) }}%</td><td class="n">{{ euro(T.iva) }}</td></tr>
+  <tr class="tot fin"><td colspan="3">{{ t('Totale documento', 'Invoice total') }}</td><td class="n">{{ euro(T.totale) }}</td></tr>
+  {% if T.da_pagare != T.totale %}
+  <tr class="tot"><td colspan="3">{{ t('Netto da pagare', 'Net amount payable') }}{% if f.ritenuta_estera_perc %} ({{ t('al netto della ritenuta estera', 'after foreign withholding tax') }} {{ f.ritenuta_estera_perc }}%){% endif %}</td><td class="n"><b>{{ euro(T.da_pagare) }}</b></td></tr>
+  {% endif %}
+</table>
+
+{% if causale %}<p class="nota" style="margin-top:3mm">{{ causale }}</p>{% endif %}
+{% if bollo %}<p class="nota">Imposta di bollo di € 2,00 assolta in modo virtuale.</p>{% endif %}
+{% if f.note %}<p style="margin-top:3mm">{{ f.note }}</p>{% endif %}
+</body></html>

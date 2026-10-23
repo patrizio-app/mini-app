@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Contratti</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#111111">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="Contratti">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/icon-192.png">
+<link rel="apple-touch-icon" href="assets/icon-180.png">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="barra">
+  <div class="logo">CONTRATTI</div>
+  <nav>
+    <a href="#elenco" data-tab="elenco">Contratti</a>
+    <a href="#fatture" data-tab="fatture">Fatture</a>
+    <a href="#dati" data-tab="dati">Dati</a>
+  </nav>
+</header>
+<main id="vista"></main>
+
+<div id="overlay" class="overlay nascosto" role="dialog" aria-modal="true">
+  <div class="overlay-box">
+    <div class="overlay-testa"><b id="overlay-titolo"></b><button type="button" class="btn leggero" id="overlay-chiudi">Chiudi</button></div>
+    <div id="overlay-corpo"></div>
+  </div>
+</div>
+<div id="toast" class="toast nascosto" role="status" aria-live="polite"></div>
+
+<script src="vendor/nunjucks.min.js"></script>
+<script src="vendor/jspdf.umd.min.js"></script>
+<script src="logica.js"></script>
+<script src="base.js"></script>
+<script src="pdf.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

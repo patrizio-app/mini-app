@@ -1,0 +1,106 @@
+@font-face { font-family: "Anton"; src: url("fonts/Anton-Regular.woff2") format("woff2"); }
+
+@page {
+  size: A4;
+  margin: 13mm 15mm 16mm 15mm;
+  @bottom-left {
+    content: string(piede);
+    font: 7pt "Helvetica Neue", Helvetica, Arial, sans-serif;
+    color: #777;
+  }
+  @bottom-right {
+    content: counter(page) " / " counter(pages);
+    font: 7pt "Helvetica Neue", Helvetica, Arial, sans-serif;
+    color: #777;
+  }
+}
+
+* { box-sizing: border-box; }
+html { font: 8.8pt/1.4 "Helvetica Neue", Helvetica, Arial, sans-serif; color: #151515; }
+body { margin: 0; }
+.piede { string-set: piede content(); height: 0; overflow: hidden; font-size: 0; line-height: 0; }
+b, strong { font-weight: 600; }
+
+/* ---------- intestazione */
+.testa { display: flex; justify-content: space-between; align-items: flex-start; padding-bottom: 4mm;
+         border-bottom: 1.4pt solid #111; margin-bottom: 4.5mm; }
+.emittente .nome { font-size: 12pt; font-weight: 700; letter-spacing: .2pt; }
+.emittente .brand { font-size: 7.5pt; letter-spacing: 1.6pt; text-transform: uppercase; color: #5fa800; font-weight: 700;
+                    margin: .5mm 0 1.5mm; }
+.emittente div { color: #444; font-size: 8pt; line-height: 1.5; }
+.titolo { text-align: right; }
+.titolo h1 { font-family: "Anton", "Helvetica Neue", sans-serif; font-weight: 400; font-size: 25pt; line-height: 1;
+             margin: 0 0 2mm; letter-spacing: .6pt; }
+.titolo table { margin-left: auto; border-collapse: collapse; font-size: 8pt; }
+.titolo td { padding: .4mm 0 .4mm 4mm; text-align: right; }
+.titolo td:first-child { color: #777; }
+
+/* ---------- blocchi */
+.due { display: flex; gap: 5mm; margin-bottom: 3mm; }
+.due > div { flex: 1; }
+.box { border: .6pt solid #d6d6d6; border-radius: 1.5mm; padding: 2.4mm 3.2mm; }
+.etich { font-size: 6.8pt; letter-spacing: 1.3pt; text-transform: uppercase; color: #777; font-weight: 700;
+         margin-bottom: 1.2mm; }
+.box .forte { font-weight: 700; font-size: 9.5pt; }
+h2 { font-size: 7.5pt; letter-spacing: 1.5pt; text-transform: uppercase; margin: 4.2mm 0 1.6mm; padding-bottom: .8mm;
+     border-bottom: .6pt solid #d6d6d6; color: #111; }
+p { margin: 0 0 1.6mm; }
+
+table.righe { width: 100%; border-collapse: collapse; font-size: 8.6pt; }
+table.righe th { text-align: left; font-size: 6.8pt; letter-spacing: 1pt; text-transform: uppercase; color: #777;
+                 font-weight: 700; padding: 1mm 2mm; border-bottom: .8pt solid #111; }
+table.righe td { padding: 1.15mm 2mm; border-bottom: .5pt solid #e2e2e2; vertical-align: top; }
+table.righe .n { text-align: right; white-space: nowrap; }
+table.righe tr.tot td { border-bottom: none; padding-top: 1.2mm; padding-bottom: 1.2mm; }
+table.righe tr.tot.fin td { border-top: 1pt solid #111; font-weight: 700; font-size: 10pt; padding-top: 2mm; }
+
+.fatti { display: flex; gap: 3mm; margin: 2mm 0 0; }
+.fatti div { flex: 1; background: #f4f4f4; border-radius: 1.5mm; padding: 1.5mm 2.5mm; }
+.fatti b { display: block; font-size: 10pt; }
+.fatti span { font-size: 6.6pt; letter-spacing: 1pt; text-transform: uppercase; color: #777; font-weight: 700; }
+
+.nota { font-size: 7.6pt; color: #555; }
+.lista { margin: 0; padding-left: 4mm; }
+.lista li { margin-bottom: .3mm; }
+.pill { display: inline-block; padding: .2mm 2mm; border-radius: 3mm; font-size: 7.4pt; font-weight: 600; }
+.pill.si { background: #e9f8d2; color: #3d6d00; }
+.pill.no { background: #efefef; color: #444; }
+
+/* ---------- firme */
+.firme { display: flex; gap: 10mm; margin-top: 6mm; page-break-inside: avoid; }
+.firme > div { flex: 1; }
+.firme .linea { border-bottom: .7pt solid #111; height: 13mm; }
+.firme .sotto { font-size: 7.4pt; color: #555; margin-top: 1.2mm; }
+
+/* ---------- contratto */
+.contratto h1.doc { font-family: "Anton", "Helvetica Neue", sans-serif; font-weight: 400; font-size: 19pt;
+                    letter-spacing: .5pt; margin: 0 0 1mm; text-align: center; }
+.contratto .sottotitolo { text-align: center; color: #666; font-size: 8pt; margin-bottom: 6mm; }
+.contratto .parti p { text-align: justify; }
+.contratto .art { margin-top: 3.6mm; }
+.contratto .art h3 { font-size: 9pt; margin: 0 0 1.2mm; font-weight: 700; page-break-after: avoid; }
+.contratto .art p { text-align: justify; hyphens: auto; }
+.contratto .tra { text-align: center; font-size: 8pt; letter-spacing: 1.2pt; text-transform: uppercase; color: #777;
+                  margin: 2mm 0; }
+.allegato { page-break-before: always; }
+.k { color: #777; width: 32%; }
+
+/* preventivo troppo lungo: versioni più compatte (scelte in automatico) */
+.stretto { font-size: 8pt; line-height: 1.32; }
+.stretto table.righe td { padding: .7mm 2mm; font-size: 7.8pt; }
+.stretto h2 { margin: 3mm 0 1.2mm; }
+.stretto .fatti div { padding: 1mm 2.2mm; }
+.stretto .firme { margin-top: 4mm; }
+.stretto .firme .linea { height: 10mm; }
+.stretto .testa { padding-bottom: 3mm; margin-bottom: 3.5mm; }
+.strettissimo { font-size: 7.3pt; line-height: 1.25; }
+.strettissimo table.righe td { padding: .45mm 1.8mm; font-size: 7.2pt; }
+.strettissimo table.righe th { padding: .6mm 1.8mm; }
+.strettissimo h2 { margin: 2.2mm 0 1mm; }
+.strettissimo .fatti div { padding: .8mm 2mm; }
+.strettissimo .fatti b { font-size: 8.5pt; }
+.strettissimo .box { padding: 1.6mm 2.6mm; }
+.strettissimo .firme { margin-top: 3mm; }
+.strettissimo .firme .linea { height: 9mm; }
+.strettissimo .testa { padding-bottom: 2.5mm; margin-bottom: 3mm; }
+.strettissimo .titolo h1 { font-size: 21pt; }

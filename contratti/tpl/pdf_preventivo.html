@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="{{ L }}"><head><meta charset="utf-8"><link rel="stylesheet" href="pdf.css"></head>
+<body class="{{ stretto }}">
+{% set it = (L == 'it') %}
+<div class="piede">{{ E.ragione_sociale }} · {{ 'P.IVA' if it else 'VAT' }} {{ '' if it else 'IT' }}{{ E.piva }} · {{ E.email }} · {{ E.telefono }}</div>
+
+<div class="testa">
+  <div class="emittente">
+    <div class="nome">{{ E.ragione_sociale }}</div>
+    <div>{{ ind_E }}</div>
+    <div>{% if E.cf == E.piva %}{{ 'C.F. e P.IVA' if it else 'Tax code & VAT no.' }} {{ '' if it else 'IT' }}{{ E.piva }}{% else %}{{ 'P.IVA' if it else 'VAT no.' }} {{ '' if it else 'IT' }}{{ E.piva }} · {{ 'C.F.' if it else 'Tax code' }} {{ E.cf }}{% endif %}</div>
+    <div>{{ E.telefono }} · {{ E.email }}</div>
+  </div>
+  <div class="titolo">
+    <h1>{{ 'PREVENTIVO' if it else 'QUOTATION' }}</h1>
+    <table>
+      <tr><td>{{ 'N.' if it else 'No.' }}</td><td><b>{{ p.numero }}</b></td></tr>
+      <tr><td>{{ 'Data' if it else 'Date' }}</td><td>{{ dl(p.data_emissione) }}</td></tr>
+      <tr><td>{{ 'Valido fino al' if it else 'Valid until' }}</td><td>{{ validita }}</td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="due">
+  <div class="box">
+    <div class="etich">{{ 'Cliente' if it else 'Client' }}</div>
+    <div class="forte">{{ C.ragione_sociale or '—' }}</div>
+    {% if ind_C %}<div>{{ ind_C }}</div>{% endif %}
+    {% if C.piva %}<div>{{ 'P.IVA / VAT' if it else 'VAT no.' }} {{ C.piva }}</div>{% endif %}
+    {% if C.cf and C.cf != C.piva %}<div>{{ 'C.F.' if it else 'Tax code' }} {{ C.cf }}</div>{% endif %}
+    {% if C.referente %}<div>{{ 'Alla c.a. di' if it else 'Attn.' }} {{ C.referente }}{% if C.ruolo_referente %} – {{ C.ruolo_referente }}{% endif %}</div>{% endif %}
+    {% if C.email or C.telefono %}<div>{{ C.email }}{% if C.email and C.telefono %} · {% endif %}{{ C.telefono }}</div>{% endif %}
+  </div>
+  <div class="box">
+    <div class="etich">{{ 'Evento' if it else 'Event' }}</div>
+    <div class="forte">{{ p.evento.nome or '—' }}</div>
+    {% if p.evento.location %}<div>{{ p.evento.location }}</div>{% endif %}
+    {% if p.evento.indirizzo %}<div>{{ p.evento.indirizzo }}</div>{% endif %}
+    {% if data_evento %}<div>{{ dl(data_evento) }}{% set ultimo = giorni|last %}{% if giorni|length > 1 and ultimo.data and ultimo.data != data_evento %} – {{ dl(ultimo.data) }}{% endif %}</div>{% endif %}
+    {% if p.evento.aperto %}<div>{{ "Evento all'aperto" if it else 'Outdoor event' }}</div>{% endif %}
+  </div>
+</div>
+
+<h2>{{ 'La prestazione' if it else 'The performance' }}</h2>
+{% if p.show.titolo %}<p><b>{{ cap(p.show.titolo) }}</b></p>{% endif %}
+{% if p.show.descrizione %}<p>{{ p.show.descrizione }}</p>{% endif %}
+<div class="fatti">
+  {% if p.show.performer %}<div><span>Performer</span><b>{{ p.show.performer }}</b></div>{% endif %}
+  {% if p.show.durata %}<div><span>{{ 'Durata' if it else 'Duration' }}</span><b>{{ p.show.durata }}</b></div>{% endif %}
+  {% if p.show.uscite %}<div><span>{{ 'Uscite' if it else 'Sets' }}</span><b>{{ p.show.uscite }}</b></div>{% endif %}
+  {% if p.show.team %}<div><span>{{ 'Team in trasferta' if it else 'Travelling team' }}</span><b>{{ p.show.team }}</b></div>{% endif %}
+</div>
+
+<div class="due" style="margin-bottom:0">
+  <div style="flex:1.35">
+    <h2>{{ 'Programma' if it else 'Schedule' }}</h2>
+    {% if giorni %}
+    <table class="righe">
+      <tr><th style="width:28%">{{ 'Data' if it else 'Date' }}</th><th>{{ 'Attività' if it else 'Activity' }}</th><th style="width:28%">{{ 'Orario' if it else 'Time' }}</th></tr>
+      {% for g in giorni %}<tr><td>{{ db(g.data) }}</td><td>{{ g.attivita }}</td><td>{{ g.orario }}</td></tr>{% endfor %}
+    </table>
+    {% else %}<p class="nota">{{ 'Da definire' if it else 'To be defined' }}</p>{% endif %}
+  </div>
+  <div>
+    <h2>{{ 'Viaggio, vitto e alloggio' if it else 'Travel, meals, accommodation' }}</h2>
+    <table class="righe">
+      {% set righe_osp = [['Viaggio','viaggio'],['Vitto','vitto'],['Alloggio','alloggio']] if it else [['Travel','viaggio'],['Meals','vitto'],['Accommodation','alloggio']] %}
+      {% for nome, k in righe_osp %}
+      <tr><td>{{ nome }}</td><td class="n">{% if p.spese[k] == 'cliente' %}<span class="pill no">{{ 'A carico del cliente' if it else "Client's expense" }}</span>{% else %}<span class="pill si">{{ 'Incluso' if it else 'Included' }}</span>{% endif %}</td></tr>
+      {% endfor %}
+    </table>
+    {% if p.spese_note %}<p class="nota" style="margin-top:1.2mm">{{ p.spese_note }}</p>{% endif %}
+  </div>
+</div>
+
+<p style="margin-top:3mm"><b>{{ 'Incluso nel compenso:' if it else 'Included in the fee:' }}</b>
+{% if it %}direzione artistica e coreografie · musiche e montaggio audio · costumi, oggetti di scena ed effetti LED dal repertorio{% if p.show.prove %} · prove: {{ p.show.prove }}{% endif %} · coordinamento del team sul posto.
+{% else %}artistic direction and choreography · show music and audio editing · costumes, props and LED effects from our repertoire{% if p.show.prove %} · rehearsals: {{ p.show.prove }}{% endif %} · on-site team coordination.{% endif %}</p>
+
+<div class="due" style="margin-bottom:0">
+  <div style="flex:1.15">
+    <h2>{{ 'Compenso' if it else 'Fee' }}</h2>
+    <table class="righe">
+      {% for v in K.voci %}<tr><td>{{ v.descrizione }}</td><td class="n">{{ euro(v.importo) }}</td></tr>{% endfor %}
+      {% if K.regime == 'iva' %}
+      <tr class="tot"><td>{{ 'Imponibile' if it else 'Subtotal' }}</td><td class="n">{{ euro(K.imponibile) }}</td></tr>
+      <tr class="tot"><td>{{ 'IVA' if it else 'VAT' }} {{ g(K.aliquota) }}%</td><td class="n">{{ euro(K.iva) }}</td></tr>
+      {% endif %}
+      <tr class="tot fin"><td>{{ 'Totale' if it else 'Total' }}</td><td class="n">{{ euro(K.totale) }}</td></tr>
+    </table>
+    {% if dicitura %}<p class="nota" style="margin-top:1.2mm">{{ dicitura }}</p>{% endif %}
+  </div>
+  <div>
+    <h2>{{ 'Pagamento' if it else 'Payment' }}</h2>
+    {% if K.acconto_perc > 0 %}
+    <p><b>{{ 'Acconto' if it else 'Deposit' }} {{ g(K.acconto_perc) }}%</b> – {{ euro(K.acconto) }} {{ 'alla firma del contratto' if it else 'on signing the agreement' }}</p>
+    <p><b>{{ 'Saldo' if it else 'Balance' }}</b> – {{ euro(K.saldo) }} {{ saldo_testo }}</p>
+    {% else %}
+    <p><b>{{ 'Intero importo' if it else 'Full amount' }}</b> – {{ euro(K.totale) }} {{ saldo_testo }}</p>
+    {% endif %}
+    <div class="box" style="margin-top:1.5mm">
+      <div class="etich">{{ 'Bonifico bancario' if it else 'Bank transfer' }}</div>
+      <div>{{ 'Intestatario' if it else 'Beneficiary' }}: <b>{{ E.intestatario }}</b></div>
+      <div>IBAN: <b>{{ E.iban }}</b></div>
+      <div>BIC/SWIFT: {{ E.swift }} · {{ E.banca }}</div>
+      <div class="nota">{{ 'Commissioni bancarie a carico del cliente.' if it else 'Bank charges borne by the client.' }}</div>
+    </div>
+  </div>
+</div>
+
+<h2>{{ 'Condizioni' if it else 'Terms' }}</h2>
+<ul class="lista nota">
+  {% if it %}
+  <li>La data è confermata con la firma di questo preventivo e del contratto allegato e con il pagamento dell'acconto.</li>
+  <li>Annullamento da parte del cliente: oltre {{ g(cond.penale_giorni_1) }} giorni prima {{ "si trattiene l'acconto" if K.acconto_perc > 0 else 'nessuna penale' }}; tra {{ g(cond.penale_giorni_1) }} e {{ g(cond.penale_giorni_2) }} giorni il {{ g(cond.penale_perc_2) }}%; meno di {{ g(cond.penale_giorni_2) }} giorni il {{ g(cond.penale_perc_3) }}% del totale. Il maltempo non è causa di annullamento.</li>
+  <li>A cura del cliente: spazio di esibizione sicuro e adeguato, impianto audio con tecnico, camerino, permessi e SIAE.</li>
+  <li>{% if p.riprese == 'no' %}Riprese foto/video dello show non consentite.{% elif p.riprese == 'esteso' %}Uso di foto e video: {{ p.riprese_note or 'come da accordi scritti' }}.{% else %}Foto e video dello show utilizzabili sui canali del cliente per comunicare l'evento; usi pubblicitari, TV o sponsor su accordo a parte.{% endif %}</li>
+  {% else %}
+  <li>The date is confirmed by signing this quotation and the attached agreement and by paying the deposit.</li>
+  <li>Cancellation by the client: more than {{ g(cond.penale_giorni_1) }} days before, {{ 'the deposit is retained' if K.acconto_perc > 0 else 'no penalty' }}; between {{ g(cond.penale_giorni_1) }} and {{ g(cond.penale_giorni_2) }} days, {{ g(cond.penale_perc_2) }}%; less than {{ g(cond.penale_giorni_2) }} days, {{ g(cond.penale_perc_3) }}% of the total. Bad weather is not a reason for cancellation.</li>
+  <li>Provided by the client: safe and suitable performance area, sound system with technician, dressing room, permits and music licences.</li>
+  <li>{% if p.riprese == 'no' %}Photo/video recording of the show is not permitted.{% elif p.riprese == 'esteso' %}Use of photos and videos: {{ p.riprese_note or 'as agreed in writing' }}.{% else %}Photos and videos of the show may be used on the client's channels to promote the event; advertising, TV or sponsor uses subject to separate agreement.{% endif %}</li>
+  {% endif %}
+</ul>
+{% if p.note_preventivo %}<p style="margin-top:2mm">{{ p.note_preventivo }}</p>{% endif %}
+
+<div class="firme">
+  <div>
+    <div class="etich">{{ E.ragione_sociale }}</div>
+    <div class="linea"></div>
+    <div class="sotto">{% if E.tipo == 'asd' %}{{ 'Il legale rappresentante' if it else 'Legal representative' }}{% if E.rappresentante %} – {{ E.rappresentante }}{% endif %}{% else %}{{ E.rappresentante or E.ragione_sociale }}{% endif %}</div>
+  </div>
+  <div>
+    <div class="etich">{{ 'Per accettazione – il cliente' if it else 'Accepted by the client' }}</div>
+    <div class="linea"></div>
+    <div class="sotto">{{ 'Data, timbro e firma' if it else 'Date, stamp and signature' }}</div>
+  </div>
+</div>
+</body></html>
