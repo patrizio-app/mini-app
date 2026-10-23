@@ -210,8 +210,9 @@
     }
 
     findMarkerAt(px, py) {
-      if (py > 30) return -1;
-      let best = -1, bestD = 10;
+      const DITO = window.MiniTouch ? 1.6 : 1;   // [mini app] zona di presa più ampia col dito
+      if (py > 30 * DITO) return -1;
+      let best = -1, bestD = 10 * DITO;
       for (let i = 0; i < this.beats.length; i++) {
         const d = Math.abs(px - this.msToX(this.beats[i]));
         if (d < bestD) { bestD = d; best = i; }

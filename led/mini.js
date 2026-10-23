@@ -201,6 +201,15 @@
 
   // Solo ciò che sul Mac si fa DA TASTIERA (il resto è già sullo schermo come pulsante).
   // gruppo "sempre": sempre visibili · gruppo "sel": compaiono quando ci sono racchette selezionate
+  const markerSelezionati = () => parseInt((document.getElementById('aa-sel-count') || {}).textContent, 10) || 0;
+  function freccia(dir) { tasto(dir, { alt: markerSelezionati() > 0, usaShift: true }); }
+  function etichetteFrecce() {
+    const passo = stato.shift ? '100ms' : '10ms';
+    const cosa = markerSelezionati() > 0 ? 'MARKER ' : '';
+    const sx = document.getElementById('mini-sx'), dx = document.getElementById('mini-dx');
+    if (sx) sx.textContent = '◀ ' + cosa + passo;
+    if (dx) dx.textContent = cosa + passo + ' ▶';
+  }
   function saltaOndaPalco() {
     const onda = document.getElementById('aa-wave-card') || document.getElementById('aa-canvas');
     const palco = document.getElementById('co-stage');
@@ -212,6 +221,10 @@
     // [etichetta, azione, spiegazione, gruppo]
     ['▶ ❚❚', () => tasto(' '), 'play / pausa', 'sempre'],
     ['＋ MARKER', () => tasto('m'), 'marker nel punto che sta suonando: toccalo a tempo di musica', 'sempre'],
+    // frecce di precisione: con marker selezionati sull'onda spostano QUEI marker, altrimenti la linea
+    // di ascolto. 10 ms a tocco, 100 ms con ⇧ MULTI acceso (come ← → e ⌥← → del Mac)
+    ['◀', () => freccia('ArrowLeft'), 'indietro di 10 ms (100 ms con ⇧ MULTI)', 'sempre', 'mini-sx'],
+    ['▶', () => freccia('ArrowRight'), 'avanti di 10 ms (100 ms con ⇧ MULTI)', 'sempre', 'mini-dx'],
     ['⟲', () => tasto('z', { meta: true }), 'annulla', 'sempre'],
     ['⟳', () => tasto('z', { meta: true, shift: true }), 'ripeti', 'sempre'],
     ['⇅', saltaOndaPalco, 'salta tra onda e palco', 'sempre'],
@@ -229,7 +242,7 @@
     barra.className = 'mini-barra';
     barra.innerHTML =
       '<button class="mini-k mini-shift" id="mini-shift" title="selezione multipla: i tocchi sulle racchette e sui marker si sommano">⇧ MULTI</button>' +
-      COMANDI.map((c, i) => '<button class="mini-k' + (c[3] === 'sel' ? ' mini-sel' : '') + '" data-k="' + i + '" title="' + esc(c[2]) +
+      COMANDI.map((c, i) => '<button class="mini-k' + (c[3] === 'sel' ? ' mini-sel' : '') + '"' + (c[4] ? ' id="' + c[4] + '"' : '') + ' data-k="' + i + '" title="' + esc(c[2]) +
         '" aria-label="' + esc(c[2]) + '">' + esc(c[0]) + '</button>').join('') +
       '<button class="mini-k mini-nascondi" id="mini-nascondi" title="nascondi la barra" aria-label="nascondi la barra">▾</button>';
     document.body.appendChild(barra);
@@ -245,6 +258,7 @@
       if (b.id === 'mini-shift') {
         stato.shift = !stato.shift;
         b.classList.toggle('on', stato.shift);
+        etichetteFrecce();
         return;
       }
       if (b.id === 'mini-nascondi') { barra.style.display = 'none'; mostra.style.display = ''; document.body.classList.remove('con-barra'); return; }
@@ -266,6 +280,9 @@
       clearInterval(aggancia);
       new MutationObserver(aggiornaSel).observe(info, { childList: true, characterData: true, subtree: true });
       aggiornaSel();
+      const selM = document.getElementById('aa-sel-count');
+      if (selM) new MutationObserver(etichetteFrecce).observe(selM, { childList: true, characterData: true, subtree: true });
+      etichetteFrecce();
     }, 300);
   }
 
