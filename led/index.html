@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>LED Coreografia</title>
+<meta name="description" content="Editor COREOGRAFIA dell'app LED, per preparare gli show anche fuori casa.">
+<meta name="theme-color" content="#000000">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="LED Coreo">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/icon-192.png">
+<link rel="apple-touch-icon" href="assets/icon-180.png">
+<link rel="stylesheet" href="fonts/fonts.css">
+<link rel="stylesheet" href="editor/app.css">
+<link rel="stylesheet" href="editor/audio-assistant.css">
+<link rel="stylesheet" href="editor/coreografia.css">
+<link rel="stylesheet" href="mini.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <span class="brand-mark">// LED COREOGRAFIA</span>
+    <span class="brand-tag">MINI APP · TELEFONO / IPAD · OFFLINE</span>
+  </div>
+</header>
+
+<main class="shell">
+  <p class="mini-intro">
+    Prepara lo show qui, poi <b>I MIEI SHOW → ⬇ PER IL MAC</b> e mandati lo zip.
+    Sul Mac: <b>IMPORTA SHOW LED NEL MAC</b> → apri lo show nell'app LED → PREPARA → racchette.
+    Il caricamento sulle racchette si fa solo dal Mac.
+  </p>
+  <div id="tab-audio">
+    <div id="audio-assistant-root">
+      <div class="aa-loading">Caricamento COREOGRAFIA…</div>
+    </div>
+  </div>
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script src="vendor/jszip.min.js"></script>
+<script src="vendor/exceljs.min.js"></script>
+<script src="editor/registro.js"></script>
+<script src="mini.js"></script>
+<script src="motore.js"></script>
+<script>
+  // come app.js del Mac: colori del registro come variabili CSS, poi l'editor
+  (function () {
+    const root = document.documentElement;
+    Object.entries(window.LED_REGISTRO.colori).forEach(([nome, info]) => root.style.setProperty('--led-' + nome.toLowerCase(), info.css));
+    const s = document.createElement('script');
+    s.src = 'editor/audio-assistant.js';
+    s.onerror = () => toast('Errore caricamento editor', 'err');
+    document.body.appendChild(s);
+    const sicuro = location.protocol === 'https:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+    if ('serviceWorker' in navigator && sicuro) navigator.serviceWorker.register('sw.js').catch(() => {});
+  })();
+</script>
+</body>
+</html>

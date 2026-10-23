@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>PPP Preventivi</title>
+<meta name="description" content="Prepara i preventivi Ping Pong Pang Crew e crea il PDF, anche offline.">
+<meta name="theme-color" content="#000000">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="PPP Preventivi">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/icon-192.png">
+<link rel="apple-touch-icon" href="assets/icon-180.png">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand"><img src="assets/logo_white.png" alt=""><span>PPP <em>Preventivi</em></span></div>
+  <nav class="tabs" aria-label="Sezioni">
+    <button type="button" data-vai="preventivo">Preventivo</button>
+    <button type="button" data-vai="archivio">Archivio</button>
+    <button type="button" data-vai="dati">Dati</button>
+  </nav>
+</header>
+
+<main id="vista" tabindex="-1"></main>
+
+<div id="overlay" class="overlay hidden" role="dialog" aria-modal="true" aria-labelledby="overlay-titolo">
+  <div class="overlay-box">
+    <div class="overlay-head">
+      <h2 id="overlay-titolo">PDF</h2>
+      <button type="button" class="btn btn-ghost" id="overlay-chiudi">Chiudi</button>
+    </div>
+    <div id="overlay-corpo"></div>
+  </div>
+</div>
+
+<div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
+
+<script src="vendor/html2canvas.min.js"></script>
+<script src="vendor/jspdf.umd.min.js"></script>
+<script src="pdf-css.js"></script>
+<script src="pdf.js"></script>
+<script src="config-ppp.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

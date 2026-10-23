@@ -1,0 +1,64 @@
+/* MINI APP LED — aggiunte per telefono/iPad (lo stile dell'editor è quello del Mac, in editor/) */
+html { -webkit-text-size-adjust: 100%; }
+body { padding-bottom: env(safe-area-inset-bottom); }
+.topbar { padding-top: calc(10px + env(safe-area-inset-top)); }
+
+/* il dito sulle aree di lavoro non deve far scorrere/zoomare la pagina */
+#aa-canvas, #aa-mini, #co-stage, #co-ap-barra { touch-action: none; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+#co-stage * { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+
+/* nella mini app non c'è la scheda CARICA SHOW: il caricamento sulle racchette si fa dal Mac */
+#co-manda { display: none !important; }
+
+.mini-intro {
+  margin: 12px 0 0; padding: 10px 14px; border: 1px solid rgba(255,255,255,.15); border-radius: 8px;
+  font-size: 13px; line-height: 1.45; color: #cfcfcf;
+}
+.mini-intro b { color: #fff; }
+
+/* finestre "File pronto" e pagine interne */
+.mini-ov {
+  position: fixed; inset: 0; z-index: 1000; background: rgba(0,0,0,.72);
+  display: flex; align-items: center; justify-content: center; padding: 16px;
+}
+.mini-box {
+  background: #141414; color: #eee; border: 1px solid #333; border-radius: 12px;
+  width: min(520px, 100%); max-height: calc(100vh - 32px); overflow: auto; padding: 18px;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+}
+.mini-ov.largo .mini-box { width: min(1200px, 100%); height: calc(100vh - 32px); display: flex; flex-direction: column; padding: 10px; }
+.mini-h { font-family: 'Audiowide', sans-serif; font-size: 17px; margin-bottom: 8px; }
+.mini-nome { font-size: 13px; color: #aaa; margin: 0 0 8px; word-break: break-all; }
+.mini-nota { font-size: 12px; color: #9a9a9a; margin: 0 0 12px; line-height: 1.45; }
+.mini-btns { display: flex; gap: 10px; flex-wrap: wrap; }
+.mini-btn {
+  min-height: 44px; padding: 10px 16px; border-radius: 8px; border: 1px solid #444; background: #222; color: #eee;
+  font: inherit; font-weight: 700; cursor: pointer;
+}
+.mini-btn.primario { background: #00e5ff; border-color: #00e5ff; color: #000; }
+.mini-pag-bar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 8px; }
+.mini-pag-bar .mini-nota { margin: 0; flex: 1 1 200px; }
+.mini-pag { flex: 1; width: 100%; border: 0; border-radius: 6px; background: #fff; }
+
+/* barra comandi (solo con il dito) */
+body.con-barra { padding-bottom: calc(64px + env(safe-area-inset-bottom)); }
+.mini-barra {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 900;
+  display: flex; gap: 6px; overflow-x: auto; -webkit-overflow-scrolling: touch;
+  padding: 8px 8px calc(8px + env(safe-area-inset-bottom)); background: rgba(10,10,10,.96);
+  border-top: 1px solid #333; scrollbar-width: none;
+}
+.mini-barra::-webkit-scrollbar { display: none; }
+.mini-k {
+  flex: 0 0 auto; min-height: 44px; padding: 0 12px; border-radius: 8px; border: 1px solid #3a3a3a;
+  background: #1d1d1d; color: #eaeaea; font: 700 12px 'JetBrains Mono', ui-monospace, monospace; letter-spacing: .5px;
+  white-space: nowrap; touch-action: manipulation;
+}
+.mini-k:active { background: #333; }
+.mini-k.mini-shift.on { background: #ff2bd6; border-color: #ff2bd6; color: #000; }
+.mini-k.mini-nascondi { margin-left: auto; }
+.mini-mostra {
+  position: fixed; right: 12px; bottom: calc(12px + env(safe-area-inset-bottom)); z-index: 900;
+  min-height: 44px; padding: 0 14px; border-radius: 22px; border: 1px solid #444; background: #1d1d1d; color: #eee;
+  font: 700 12px 'JetBrains Mono', ui-monospace, monospace;
+}
