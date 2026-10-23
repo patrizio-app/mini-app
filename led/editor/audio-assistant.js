@@ -799,7 +799,7 @@
   // ============================================================
   wc.mini = el("aa-mini");
   // WAVEFORM AGGANCIATA: scorrendo giu' verso il palco resta in alto (piu' compatta), risalendo torna normale
-  if ("IntersectionObserver" in window) {
+  if (false && "IntersectionObserver" in window) {   // [mini app] aggancio disattivato
     new IntersectionObserver(([v]) => {
       const agganciata = !v.isIntersecting && v.boundingClientRect.top < 0;
       if (waveCard.classList.contains("pinned") === agganciata) return;
