@@ -299,6 +299,14 @@
     wrap.parentNode.insertBefore(a, wrap);
   }, 400);
 
+  // VISIONE D'INSIEME apribile/chiudibile toccando il titolo (parte chiusa: vedi mini.css)
+  document.addEventListener('click', (e) => {
+    const h = e.target.closest && e.target.closest('.co-lanes-head');
+    if (!h) return;
+    const card = h.closest('.co-lanes-card');
+    if (card) card.classList.toggle('aperta');
+  });
+
   // la barra serve solo con il dito (su un computer con tastiera non compare)
   const touch = ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
   if (touch) document.addEventListener('DOMContentLoaded', costruisciBarra);

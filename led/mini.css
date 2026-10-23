@@ -83,3 +83,25 @@ body.con-barra { padding-bottom: calc(120px + env(safe-area-inset-bottom)); }
 /* i messaggi a comparsa stanno sopra la barra comandi */
 body.con-barra .toast { bottom: calc(80px + env(safe-area-inset-bottom)) !important; z-index: 950; }
 @media (max-width: 560px) { body.con-barra .toast { bottom: calc(130px + env(safe-area-inset-bottom)) !important; } }
+
+/* pulsanti in fondo: due gruppi a griglia, stessa misura, facili da toccare */
+.co-foot { display: grid !important; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px !important; align-items: stretch; }
+.co-foot-l, .co-foot-r { display: contents !important; }
+.co-foot .co-divider, #co-manda { display: none !important; }
+.co-foot .co-btn { width: 100%; min-height: 48px; justify-content: center; text-align: center; white-space: normal; line-height: 1.2; }
+#co-anteprima-btn { order: 1; } #co-mappa-btn { order: 2; } #co-verifica-btn { order: 3; }
+#co-prog-info { grid-column: 1 / -1; order: 5; text-align: center; min-height: 0; }
+#co-save { order: 6; background: #00e5ff; border-color: #00e5ff; color: #000; } #co-open { order: 7; } #co-new { order: 8; }
+#co-ripristina { order: 9; } #co-export { order: 10; min-height: 40px !important; opacity: .8; font-size: 11px; }
+.co-foot::before, .co-foot::after { grid-column: 1 / -1; font: 700 11px 'JetBrains Mono', monospace; letter-spacing: 3px; color: #8a8a8a; margin-top: 4px; }
+.co-foot::before { content: 'SHOW'; order: 0; }
+.co-foot::after { content: 'PROGETTO'; order: 4; margin-top: 10px; }
+@media (max-width: 560px) { .co-foot .co-btn { font-size: 11px; padding: 6px 4px; } }
+
+/* VISIONE D'INSIEME chiusa di base: si apre toccando il titolo */
+.co-lanes-head { cursor: pointer; }
+.co-lanes-head .co-sec-title::after { content: '  ▸ tocca per aprire'; color: #8a8a8a; }
+.co-lanes-card.aperta .co-lanes-head .co-sec-title::after { content: '  ▾ tocca per chiudere'; }
+.co-lanes-card:not(.aperta) .co-lanes { display: none; }
+/* sul Mac NUOVO sta nella HOME; qui la HOME non c'è: il pulsante serve */
+.co-foot #co-new { display: flex !important; }
