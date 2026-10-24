@@ -23,7 +23,7 @@
 
 <div class="due">
   <div class="box">
-    <div class="etich">{{ 'Cliente' if it else 'Client' }}</div>
+    <div class="etich">{{ 'Committente' if it else 'Client' }}</div>
     <div class="forte">{{ C.ragione_sociale or '—' }}</div>
     {% if ind_C %}<div>{{ ind_C }}</div>{% endif %}
     {% if C.piva %}<div>{{ 'P.IVA / VAT' if it else 'VAT no.' }} {{ C.piva }}</div>{% endif %}
@@ -66,7 +66,7 @@
     <table class="righe">
       {% set righe_osp = [['Viaggio','viaggio'],['Vitto','vitto'],['Alloggio','alloggio']] if it else [['Travel','viaggio'],['Meals','vitto'],['Accommodation','alloggio']] %}
       {% for nome, k in righe_osp %}
-      <tr><td>{{ nome }}</td><td class="n">{% if p.spese[k] == 'cliente' %}<span class="pill no">{{ 'A carico del cliente' if it else "Client's expense" }}</span>{% else %}<span class="pill si">{{ 'Incluso' if it else 'Included' }}</span>{% endif %}</td></tr>
+      <tr><td>{{ nome }}</td><td class="n">{% if p.spese[k] == 'cliente' %}<span class="pill no">{{ 'A carico del Committente' if it else "Client's expense" }}</span>{% else %}<span class="pill si">{{ 'Incluso' if it else 'Included' }}</span>{% endif %}</td></tr>
       {% endfor %}
     </table>
     {% if p.spese_note %}<p class="nota" style="margin-top:1.2mm">{{ p.spese_note }}</p>{% endif %}
@@ -103,7 +103,7 @@
       <div>{{ 'Intestatario' if it else 'Beneficiary' }}: <b>{{ E.intestatario }}</b></div>
       <div>IBAN: <b>{{ E.iban }}</b></div>
       <div>BIC/SWIFT: {{ E.swift }} · {{ E.banca }}</div>
-      <div class="nota">{{ 'Commissioni bancarie a carico del cliente.' if it else 'Bank charges borne by the client.' }}</div>
+      <div class="nota">{{ 'Commissioni bancarie a carico del Committente.' if it else 'Bank charges borne by the client.' }}</div>
     </div>
   </div>
 </div>
@@ -112,9 +112,9 @@
 <ul class="lista nota">
   {% if it %}
   <li>La data è confermata con la firma di questo preventivo e del contratto allegato e con il pagamento dell'acconto.</li>
-  <li>Annullamento da parte del cliente: oltre {{ g(cond.penale_giorni_1) }} giorni prima {{ "si trattiene l'acconto" if K.acconto_perc > 0 else 'nessuna penale' }}; tra {{ g(cond.penale_giorni_1) }} e {{ g(cond.penale_giorni_2) }} giorni il {{ g(cond.penale_perc_2) }}%; meno di {{ g(cond.penale_giorni_2) }} giorni il {{ g(cond.penale_perc_3) }}% del totale. Il maltempo non è causa di annullamento.</li>
-  <li>A cura del cliente: spazio di esibizione sicuro e adeguato, impianto audio con tecnico, camerino, permessi e SIAE.</li>
-  <li>{% if p.riprese == 'no' %}Riprese foto/video dello show non consentite.{% elif p.riprese == 'esteso' %}Uso di foto e video: {{ p.riprese_note or 'come da accordi scritti' }}.{% else %}Foto e video dello show utilizzabili sui canali del cliente per comunicare l'evento; usi pubblicitari, TV o sponsor su accordo a parte.{% endif %}</li>
+  <li>Annullamento da parte del Committente: oltre {{ g(cond.penale_giorni_1) }} giorni prima {{ "si trattiene l'acconto" if K.acconto_perc > 0 else 'nessuna penale' }}; tra {{ g(cond.penale_giorni_1) }} e {{ g(cond.penale_giorni_2) }} giorni il {{ g(cond.penale_perc_2) }}%; meno di {{ g(cond.penale_giorni_2) }} giorni il {{ g(cond.penale_perc_3) }}% del totale. Il maltempo non è causa di annullamento.</li>
+  <li>A cura del Committente: spazio di esibizione sicuro e adeguato, impianto audio con tecnico, camerino, permessi e licenze musicali.</li>
+  <li>{% if p.riprese == 'no' %}Riprese foto/video dello show non consentite.{% elif p.riprese == 'esteso' %}Uso di foto e video: {{ p.riprese_note or 'come da accordi scritti' }}.{% else %}Foto e video dello show utilizzabili sui canali del Committente per comunicare l'evento; usi pubblicitari, TV o sponsor su accordo a parte.{% endif %}</li>
   {% else %}
   <li>The date is confirmed by signing this quotation and the attached agreement and by paying the deposit.</li>
   <li>Cancellation by the client: more than {{ g(cond.penale_giorni_1) }} days before, {{ 'the deposit is retained' if K.acconto_perc > 0 else 'no penalty' }}; between {{ g(cond.penale_giorni_1) }} and {{ g(cond.penale_giorni_2) }} days, {{ g(cond.penale_perc_2) }}%; less than {{ g(cond.penale_giorni_2) }} days, {{ g(cond.penale_perc_3) }}% of the total. Bad weather is not a reason for cancellation.</li>
@@ -131,7 +131,7 @@
     <div class="sotto">{% if E.tipo == 'asd' %}{{ 'Il legale rappresentante' if it else 'Legal representative' }}{% if E.rappresentante %} – {{ E.rappresentante }}{% endif %}{% else %}{{ E.rappresentante or E.ragione_sociale }}{% endif %}</div>
   </div>
   <div>
-    <div class="etich">{{ 'Per accettazione – il cliente' if it else 'Accepted by the client' }}</div>
+    <div class="etich">{{ 'Per accettazione – il Committente' if it else 'Accepted by the Client' }}</div>
     <div class="linea"></div>
     <div class="sotto">{{ 'Data, timbro e firma' if it else 'Date, stamp and signature' }}</div>
   </div>
