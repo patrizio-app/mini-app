@@ -50,7 +50,11 @@
   const salvaTutto = () => Promise.all(['imp', 'pratiche', 'fatture', 'clienti', 'ppp', 'numeri_ppp', 'mac'].map(k => DB.set(k, st[k])));
   const datiPronti = () => Object.values(st.imp.emittenti).some(E => E.piva && E.iban);
 
-  function prossimoNumero(anno) { return L.prossimoNumero(anno, st.pratiche.map(p => p.numero).concat(st.numeri_ppp)); }
+  // ognuno (ASD / Patrizio) ha la sua numerazione; niente in comune con PPP
+  function prossimoNumero(anno, emittente) {
+    emittente = emittente || 'patrizio';
+    return L.prossimoNumero(anno, st.pratiche.filter(p => p.emittente === emittente).map(p => p.numero), st.imp.emittenti[emittente]);
+  }
   function ricordaCliente(c) {
     const nome = String(c.ragione_sociale || '').trim(); if (!nome) return;
     const nuovo = {}; L.CAMPI_CLIENTE.forEach(k => { nuovo[k] = c[k] || ''; }); nuovo._qui = true;
@@ -201,8 +205,8 @@
     else if (q.get('da')) {
       P = copia(st.pratiche.find(p => p.id === q.get('da')));
       Object.assign(P, { id: '', stato: 'bozza', data_emissione: L.iso(L.oggi()), anno: L.iso(L.oggi()).slice(0, 4), _qui: true });
-      P.numero = prossimoNumero(P.anno);
-    } else P = L.praticaVuota(st.imp, 'patrizio', prossimoNumero(L.iso(L.oggi()).slice(0, 4)));
+      P.numero = prossimoNumero(P.anno, P.emittente);
+    } else P = L.praticaVuota(st.imp, 'patrizio', prossimoNumero(L.iso(L.oggi()).slice(0, 4), 'patrizio'));
     if (!P.emittente) return vai('#elenco');
     const nuovo = !P.id;
     V.innerHTML = `<div class="testa-pagina"><h1>${nuovo ? 'Nuovo preventivo e contratto' : 'N. ' + esc(P.numero)}</h1><a class="btn leggero" href="#elenco">← Elenco</a></div>
@@ -281,7 +285,11 @@
       el.value = L.tipoPredefinito(EM[emittente()] || {}, $('[data-k=lingua]').value);
     }
     $('[data-k=lingua]').addEventListener('change', e => { cambiaLingua(e.target.value); aggiornaTipo(); });
-    $$('input[name=emittente]').forEach(r => r.addEventListener('change', () => { regimeToccato = false; aggiornaTipo(); aggiorna(); }));
+    $$('input[name=emittente]').forEach(r => r.addEventListener('change', () => {
+      regimeToccato = false;
+      if (!P.id) $('[data-k=numero]').value = prossimoNumero(String($('[data-k=data_emissione]').value || L.iso(L.oggi())).slice(0, 4), r.value);
+      aggiornaTipo(); aggiorna();
+    }));
     $('[data-k="cliente.nazione"]').addEventListener('change', () => { regimeToccato = false; aggiorna(); });
     const rub = $('#rubrica');
     if (rub) rub.onchange = () => { const c = st.clienti[rub.value]; if (!c) return; Object.entries(c).forEach(([k, v]) => { const el = $(`[data-k="cliente.${k}"]`); if (el) el.value = v || ''; }); if (!c.nazione) $('[data-k="cliente.nazione"]').value = 'IT'; regimeToccato = false; aggiorna(); };
@@ -292,7 +300,6 @@
       const o = datiPPP.opzioni[num($('#ppp-opz').value)] || {};
       $('[data-k=lingua]').value = datiPPP.lingua; cambiaLingua(datiPPP.lingua);
       const p = leggi();
-      if (datiPPP.numero) p.numero = datiPPP.numero;
       if (datiPPP.cliente && !p.cliente.ragione_sociale) { p.cliente.ragione_sociale = datiPPP.cliente; const c = st.clienti.find(x => (x.ragione_sociale || '').toLowerCase() === datiPPP.cliente.toLowerCase()); if (c) Object.assign(p.cliente, c); }
       Object.assign(p.evento, datiPPP.evento);
       if (datiPPP.giorni.length) p.giorni = datiPPP.giorni;
@@ -328,9 +335,9 @@
       if (!p.cliente.ragione_sociale) return esito('Manca il nome del cliente (punto 2).', 'err');
       if (!p.evento.nome) return esito("Manca il nome dell'evento (punto 3).", 'err');
       if (!p.voci.some(v => num(v.importo))) return esito('Manca il compenso (punto 5).', 'err');
-      p.numero = String(p.numero || '').trim() || prossimoNumero(String(p.data_emissione || L.iso(L.oggi())).slice(0, 4));
+      p.numero = String(p.numero || '').trim() || prossimoNumero(String(p.data_emissione || L.iso(L.oggi())).slice(0, 4), p.emittente);
       p.anno = p.numero.includes('/') ? p.numero.split('/').pop() : String(p.data_emissione).slice(0, 4);
-      if (st.pratiche.some(x => x.numero === p.numero && x.id !== p.id) && !confirm('Il numero ' + p.numero + ' è già usato. Salvo lo stesso?')) return esito('Non salvato: cambia il numero.', 'err');
+      if (st.pratiche.some(x => x.numero === p.numero && x.emittente === p.emittente && x.id !== p.id) && !confirm('Il numero ' + p.numero + ' è già usato. Salvo lo stesso?')) return esito('Non salvato: cambia il numero.', 'err');
       const t = ora();
       if (!p.id) { p.id = nuovoId(); p.creato_il = t; st.pratiche.push(p); } else { const i = st.pratiche.findIndex(x => x.id === p.id); st.pratiche[i >= 0 ? i : st.pratiche.length] = p; }
       p.aggiornato_il = t; p._qui = true; delete p.file;

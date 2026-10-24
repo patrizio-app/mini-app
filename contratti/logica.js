@@ -434,16 +434,26 @@
       evento: { nome: q.nome_evento || '', location: q.luogo || '' },
       giorni: q.data_evento ? [{ data: q.data_evento, attivita: q.lingua !== 'en' ? 'Spettacolo' : 'Show', orario: '' }] : [],
       show: { descrizione: String(q.descrizione_show || '').replace(/\s*ping pong pang crew\s*/gi, ' ').trim() },
-      opzioni: opz, rif: q.numero, numero: q.numero || '',
+      opzioni: opz, rif: q.numero,   // il numero PPP resta solo come riferimento
       acconto_perc: t.acconto_percentuale != null ? t.acconto_percentuale : 30,
       validita_giorni: t.validita_giorni != null ? t.validita_giorni : 30,
       saldo_testo: t.saldo_tempi || '',
     };
   }
-  function prossimoNumero(anno, numeri) {
+  // Primo numero dell'anno per un emittente (Impostazioni: vale solo per il suo anno), altrimenti 1.
+  function numeroPartenza(E, anno) {
+    E = E || {};
+    if (String(E.partenza_anno == null ? '' : E.partenza_anno).trim() === String(anno)) {
+      const v = parseInt(E.partenza_numero, 10);
+      if (v > 0) return v;
+    }
+    return 1;
+  }
+  // numeri = numeri delle pratiche di QUESTO emittente (ognuno ha la sua numerazione, niente PPP)
+  function prossimoNumero(anno, numeri, E) {
     anno = String(anno); let n = 0;
-    numeri.forEach(u => { const m = /^(\d+)\/(\d{4})$/.exec(String(u || '').trim()); if (m && m[2] === anno) n = Math.max(n, parseInt(m[1], 10)); });
-    return String(n + 1).padStart(3, '0') + '/' + anno;
+    numeri.forEach(u => { const m = /^\s*(\d+)\s*\/\s*(\d{4})\s*$/.exec(String(u || '')); if (m && m[2] === anno) n = Math.max(n, parseInt(m[1], 10)); });
+    return String(Math.max(n + 1, numeroPartenza(E, anno))).padStart(3, '0') + '/' + anno;
   }
 
   const LOGICA = {
@@ -452,7 +462,7 @@
     indirizzo, dicituraIva, tipoPredefinito, tipoPrestazione, variabili, articoli, premesse, approvazione,
     parteFornitore, parteCliente, esc,
     latino, totaliFattura, causale, bolloDovuto, fatturaXml,
-    praticaVuota, fatturaVuota, fatturaDaPratica, daPPP, prossimoNumero, iso, oggi,
+    praticaVuota, fatturaVuota, fatturaDaPratica, daPPP, prossimoNumero, numeroPartenza, iso, oggi,
   };
   if (typeof module !== 'undefined' && module.exports) module.exports = LOGICA;
   else radice.LOGICA = LOGICA;

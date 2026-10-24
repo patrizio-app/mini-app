@@ -1,6 +1,6 @@
 /* Service worker: tiene la app sul dispositivo per usarla senza internet.
  * GENERATO da strumenti/monta_contratti.py (la VERSIONE cambia da sola quando cambiano i file). */
-const VERSIONE = 'contratti-acdc14a725';
+const VERSIONE = 'contratti-bcc3cabef9';
 const FILE = ['./', './index.html', './style.css', './app.js', './logica.js', './pdf.js', './base.js', './pdf.css', './manifest.webmanifest', './tpl/pdf_preventivo.html', './tpl/pdf_contratto.html', './tpl/pdf_fattura.html', './vendor/nunjucks.min.js', './vendor/html2canvas.min.js', './vendor/jspdf.umd.min.js', './fonts/Anton-Regular.woff2', './assets/icon-180.png', './assets/icon-192.png', './assets/icon-512.png'];
 
 self.addEventListener('install', (e) => {
