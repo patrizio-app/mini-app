@@ -70,6 +70,7 @@ table.righe tr.tot.fin td { border-top: 1pt solid #111; font-weight: 700; font-s
 .firme { display: flex; gap: 10mm; margin-top: 6mm; page-break-inside: avoid; }
 .firme > div { flex: 1; }
 .firme .linea { border-bottom: .7pt solid #111; height: 13mm; }
+.firme .firma-img { height: 9mm; margin-top: 1mm; }
 .firme .sotto { font-size: 7.4pt; color: #555; margin-top: 1.2mm; }
 
 /* ---------- contratto */
@@ -92,6 +93,7 @@ table.righe tr.tot.fin td { border-top: 1pt solid #111; font-weight: 700; font-s
 .stretto .fatti div { padding: 1mm 2.2mm; }
 .stretto .firme { margin-top: 4mm; }
 .stretto .firme .linea { height: 10mm; }
+.stretto .firma-img { height: 7mm; }
 .stretto .testa { padding-bottom: 3mm; margin-bottom: 3.5mm; }
 .strettissimo { font-size: 7.3pt; line-height: 1.25; }
 .strettissimo table.righe td { padding: .45mm 1.8mm; font-size: 7.2pt; }
@@ -102,5 +104,6 @@ table.righe tr.tot.fin td { border-top: 1pt solid #111; font-weight: 700; font-s
 .strettissimo .box { padding: 1.6mm 2.6mm; }
 .strettissimo .firme { margin-top: 3mm; }
 .strettissimo .firme .linea { height: 9mm; }
+.strettissimo .firma-img { height: 6mm; }
 .strettissimo .testa { padding-bottom: 2.5mm; margin-bottom: 3mm; }
 .strettissimo .titolo h1 { font-size: 21pt; }

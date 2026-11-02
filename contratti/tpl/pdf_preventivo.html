@@ -127,7 +127,7 @@
 <div class="firme">
   <div>
     <div class="etich">{{ E.ragione_sociale }}</div>
-    <div class="linea"></div>
+    <div class="linea">{% if firma_fornitore %}<img class="firma-img" src="{{ firma_fornitore }}" alt="">{% endif %}</div>
     <div class="sotto">{% if E.tipo == 'asd' %}{{ 'Il legale rappresentante' if it else 'Legal representative' }}{% if E.rappresentante %} – {{ E.rappresentante }}{% endif %}{% else %}{{ E.rappresentante or E.ragione_sociale }}{% endif %}</div>
   </div>
   <div>
